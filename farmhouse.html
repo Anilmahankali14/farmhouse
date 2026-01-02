@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmhouse Rentals Pro | Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --primary-light: #4caf50;
+            --secondary: #ff9800;
+            --dark: #1b5e20;
+            --light: #f1f8e9;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--dark));
+            border: none;
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(46, 125, 50, 0.3);
+        }
+
+        .stat-card {
+            padding: 25px;
+            border-radius: 16px;
+            background: white;
+            border-left: 5px solid var(--primary);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .farmhouse-card {
+            transition: all 0.3s ease;
+            border: none;
+            border-radius: 16px;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        .farmhouse-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .farmhouse-img {
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .farmhouse-card:hover .farmhouse-img {
+            transform: scale(1.05);
+        }
+
+        .price-tag {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--secondary);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+        }
+
+        .availability-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .modal-content {
+            border-radius: 20px;
+            border: none;
+            overflow: hidden;
+        }
+
+        .tab-content {
+            padding: 30px;
+            background: white;
+            border-radius: 0 0 20px 20px;
+        }
+
+        .nav-tabs .nav-link {
+            border: none;
+            padding: 15px 25px;
+            font-weight: 600;
+            color: #666;
+        }
+
+        .nav-tabs .nav-link.active {
+            background: linear-gradient(135deg, var(--primary), var(--dark));
+            color: white;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .calendar-day {
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+        }
+
+        .calendar-day.available {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .calendar-day.booked {
+            background: #ffebee;
+            color: #c62828;
+            cursor: not-allowed;
+        }
+
+        .calendar-day.selected {
+            background: #bbdefb;
+            color: #1565c0;
+            transform: scale(1.05);
+        }
+
+        .amenity-tag {
+            display: inline-block;
+            background: #f5f5f5;
+            padding: 8px 16px;
+            margin: 4px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid #e0e0e0;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold fs-3" href="#">
+                <i class="fas fa-home me-2"></i>Farmhouse Rentals Pro
+            </a>
+            <div class="navbar-nav ms-auto">
+                <button class="btn btn-primary" onclick="showAddFarmhouseModal()">
+                    <i class="fas fa-plus me-2"></i>Add Farmhouse
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container-fluid mt-5 pt-4">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-lg-3 mb-4">
+                <div class="glass-card p-4 mb-4">
+                    <h5 class="fw-bold mb-3 text-primary">
+                        <i class="fas fa-chart-line me-2"></i>Quick Stats
+                    </h5>
+                    <div class="stat-card mb-3">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="text-muted">Total Farmhouses</h6>
+                                <h3 class="fw-bold" id="total-farmhouses">0</h3>
+                            </div>
+                            <i class="fas fa-home fa-2x text-primary"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card mb-3">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="text-muted">Available Now</h6>
+                                <h3 class="fw-bold" id="available-now">0</h3>
+                            </div>
+                            <i class="fas fa-calendar-check fa-2x text-success"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="text-muted">Total Revenue</h6>
+                                <h3 class="fw-bold" id="total-revenue">$0</h3>
+                            </div>
+                            <i class="fas fa-dollar-sign fa-2x text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="glass-card p-4">
+                    <h5 class="fw-bold mb-3 text-primary">
+                        <i class="fas fa-bolt me-2"></i>Quick Actions
+                    </h5>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-outline-primary" onclick="showAddFarmhouseModal()">
+                            <i class="fas fa-plus-circle me-2"></i>Add New Farmhouse
+                        </button>
+                        <button class="btn btn-outline-success" onclick="exportData()">
+                            <i class="fas fa-download me-2"></i>Export All Data
+                        </button>
+                        <button class="btn btn-outline-warning" onclick="loadSampleData()">
+                            <i class="fas fa-magic me-2"></i>Load Sample Data
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-lg-9">
+                <!-- Header -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h1 class="fw-bold text-dark">Farmhouse Management</h1>
+                        <p class="text-muted">Manage your properties, availability, and bookings</p>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-outline-primary active" onclick="setViewMode('grid')">
+                            <i class="fas fa-th-large"></i>
+                        </button>
+                        <button class="btn btn-outline-primary" onclick="setViewMode('list')">
+                            <i class="fas fa-list"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Farmhouses Grid View -->
+                <div class="row" id="farmhouses-grid">
+                    <!-- Farmhouses will be loaded here -->
+                </div>
+
+                <!-- Loading State -->
+                <div id="loading-state" class="text-center py-5">
+                    <div class="loading-spinner mx-auto mb-3"></div>
+                    <p class="text-muted">Loading farmhouses...</p>
+                </div>
+
+                <!-- Empty State -->
+                <div id="empty-state" class="text-center py-5" style="display: none;">
+                    <i class="fas fa-home fa-4x text-muted mb-4"></i>
+                    <h4 class="text-muted mb-3">No Farmhouses Yet</h4>
+                    <p class="text-muted mb-4">Start by adding your first farmhouse property</p>
+                    <button class="btn btn-primary" onclick="showAddFarmhouseModal()">
+                        <i class="fas fa-plus me-2"></i>Add First Farmhouse
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Farmhouse Modal -->
+    <div class="modal fade" id="farmhouseModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="modalTitle">Add New Farmhouse</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="farmhouseForm">
+                        <input type="hidden" id="farmhouseId">
+
+                        <!-- Tabs -->
+                        <ul class="nav nav-tabs mb-3" id="formTabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-bs-toggle="tab" href="#basicInfo">
+                                    <i class="fas fa-info-circle me-2"></i>Basic Info
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#pricingDates">
+                                    <i class="fas fa-calendar-alt me-2"></i>Pricing & Dates
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#photosAmenities">
+                                    <i class="fas fa-images me-2"></i>Photos & Amenities
+                                </a>
+                            </li>
+                        </ul>
+
+                        <!-- Tab Content -->
+                        <div class="tab-content">
+                            <!-- Basic Info Tab -->
+                            <div class="tab-pane fade show active" id="basicInfo">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">Farmhouse Name *</label>
+                                        <input type="text" class="form-control" id="name" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">Location *</label>
+                                        <input type="text" class="form-control" id="location" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label fw-bold">Bedrooms *</label>
+                                        <input type="number" class="form-control" id="bedrooms" required min="1">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label fw-bold">Bathrooms *</label>
+                                        <input type="number" class="form-control" id="bathrooms" required min="1">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label fw-bold">Max Guests *</label>
+                                        <input type="number" class="form-control" id="maxGuests" required min="1">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Description *</label>
+                                    <textarea class="form-control" id="description" rows="4" required></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Pricing & Dates Tab -->
+                            <div class="tab-pane fade" id="pricingDates">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">Base Price/Night ($) *</label>
+                                        <input type="number" class="form-control" id="price" required min="0"
+                                            step="0.01">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">Weekend Price ($)</label>
+                                        <input type="number" class="form-control" id="weekendPrice" min="0" step="0.01">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">Available From *</label>
+                                        <input type="date" class="form-control" id="availableFrom" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">Available To *</label>
+                                        <input type="date" class="form-control" id="availableTo" required>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Blocked Dates</label>
+                                    <input type="text" class="form-control" id="blockedDates"
+                                        placeholder="Enter dates separated by commas (YYYY-MM-DD)">
+                                    <small class="text-muted">Example: 2024-12-25, 2024-12-31</small>
+                                </div>
+                            </div>
+
+                            <!-- Photos & Amenities Tab -->
+                            <div class="tab-pane fade" id="photosAmenities">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Photo URLs</label>
+                                    <textarea class="form-control" id="photoUrls" rows="3"
+                                        placeholder="Enter image URLs (one per line)">
+                                    </textarea>
+                                    <small class="text-muted">Add multiple image URLs for a slideshow</small>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Select Amenities</label>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" value="WiFi">
+                                                <label class="form-check-label">High-Speed WiFi</label>
+                                            </div>
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" value="Pool">
+                                                <label class="form-check-label">Swimming Pool</label>
+                                            </div>
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" value="Kitchen">
+                                                <label class="form-check-label">Full Kitchen</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" value="Parking">
+                                                <label class="form-check-label">Free Parking</label>
+                                            </div>
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" value="AC">
+                                                <label class="form-check-label">Air Conditioning</label>
+                                            </div>
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" value="Garden">
+                                                <label class="form-check-label">Garden</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" value="BBQ">
+                                                <label class="form-check-label">BBQ Area</label>
+                                            </div>
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" value="Pet Friendly">
+                                                <label class="form-check-label">Pet Friendly</label>
+                                            </div>
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" value="Fireplace">
+                                                <label class="form-check-label">Fireplace</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4 pt-3 border-top">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                Cancel
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Save Farmhouse
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manage Dates Modal -->
+    <div class="modal fade" id="datesModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">Manage Availability</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="currentFarmhouseId">
+                    <h6 id="farmhouseNameDates" class="mb-3"></h6>
+
+                    <div class="mb-3">
+                        <label class="form-label">Select Dates to Block/Unblock</label>
+                        <input type="text" class="form-control" id="dateRangePicker" placeholder="Select date range">
+                    </div>
+
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <button class="btn btn-danger w-100" onclick="blockSelectedDates()">
+                                <i class="fas fa-ban me-2"></i>Block Dates
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-success w-100" onclick="unblockSelectedDates()">
+                                <i class="fas fa-check me-2"></i>Unblock Dates
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <h6 class="mb-2">Blocked Dates</h6>
+                        <div id="blockedDatesList" class="p-3 bg-light rounded">
+                            <!-- Blocked dates will be shown here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Details Modal -->
+    <div class="modal fade" id="detailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailsTitle"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="detailsCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
+                        <div class="carousel-inner rounded" id="carouselInner">
+                            <!-- Images will be loaded here -->
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#detailsCarousel"
+                            data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#detailsCarousel"
+                            data-bs-slide="next">
+                            <span class="carousel-control-next-icon"></span>
+                        </button>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h6 class="text-muted mb-2">
+                                <i class="fas fa-map-marker-alt text-danger me-2"></i>
+                                <span id="detailsLocation"></span>
+                            </h6>
+                            <p id="detailsDescription" class="mb-3"></p>
+
+                            <div class="mb-3">
+                                <h6>Amenities</h6>
+                                <div id="detailsAmenities"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h6 class="card-title">Pricing Details</h6>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Base Price:</span>
+                                        <strong id="detailsBasePrice"></strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Weekend Price:</span>
+                                        <strong id="detailsWeekendPrice"></strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Available From:</span>
+                                        <span id="detailsAvailableFrom"></span>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span>Available To:</span>
+                                        <span id="detailsAvailableTo"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        // Data storage
+        let farmhouses = JSON.parse(localStorage.getItem('farmhouses')) || [];
+        let bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function () {
+            loadFarmhouses();
+            setupEventListeners();
+            initDatePickers();
+            updateStatistics();
+        });
+
+        function setupEventListeners() {
+            // Farmhouse form submission
+            document.getElementById('farmhouseForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                saveFarmhouse();
+            });
+        }
+
+        function initDatePickers() {
+            flatpickr("#availableFrom", {
+                minDate: "today"
+            });
+
+            flatpickr("#availableTo", {
+                minDate: "today"
+            });
+
+            flatpickr("#dateRangePicker", {
+                mode: "range",
+                dateFormat: "Y-m-d",
+                minDate: "today"
+            });
+        }
+
+        function loadFarmhouses() {
+            const loading = document.getElementById('loading-state');
+            const empty = document.getElementById('empty-state');
+            const grid = document.getElementById('farmhouses-grid');
+
+            if (farmhouses.length === 0) {
+                loading.style.display = 'none';
+                empty.style.display = 'block';
+                grid.innerHTML = '';
+                return;
+            }
+
+            loading.style.display = 'none';
+            empty.style.display = 'none';
+
+            grid.innerHTML = farmhouses.map(farmhouse => createFarmhouseCard(farmhouse)).join('');
+        }
+
+        function createFarmhouseCard(farmhouse) {
+            const mainImage = farmhouse.photoUrls && farmhouse.photoUrls.length > 0
+                ? farmhouse.photoUrls[0]
+                : 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+
+            const today = new Date();
+            const availableFrom = new Date(farmhouse.availableFrom);
+            const isAvailable = today >= availableFrom;
+
+            return `
+                <div class="col-lg-4 col-md-6 mb-4 fade-in">
+                    <div class="farmhouse-card glass-card">
+                        <div class="position-relative overflow-hidden">
+                            <img src="${mainImage}" class="farmhouse-img w-100" alt="${farmhouse.name}">
+                            <div class="price-tag">$${farmhouse.price}/night</div>
+                            <div class="availability-badge ${isAvailable ? 'bg-success' : 'bg-warning'} text-white">
+                                ${isAvailable ? 'Available' : 'Coming Soon'}
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h5 class="fw-bold mb-2">${farmhouse.name}</h5>
+                            <p class="text-muted mb-3">
+                                <i class="fas fa-map-marker-alt text-danger me-1"></i>
+                                ${farmhouse.location}
+                            </p>
+                            <div class="d-flex justify-content-between text-muted mb-3">
+                                <small><i class="fas fa-bed me-1"></i>${farmhouse.bedrooms} beds</small>
+                                <small><i class="fas fa-bath me-1"></i>${farmhouse.bathrooms} baths</small>
+                                <small><i class="fas fa-users me-1"></i>${farmhouse.maxGuests} guests</small>
+                            </div>
+                            <p class="small text-muted mb-3">${farmhouse.description.substring(0, 100)}...</p>
+                            
+                            <div class="amenities mb-3">
+                                ${farmhouse.amenities.slice(0, 3).map(amenity =>
+                `<span class="amenity-tag">${amenity}</span>`
+            ).join('')}
+                                ${farmhouse.amenities.length > 3 ?
+                    `<span class="amenity-tag">+${farmhouse.amenities.length - 3} more</span>` : ''
+                }
+                            </div>
+                            
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm btn-primary flex-fill" onclick="viewFarmhouse(${farmhouse.id})">
+                                    <i class="fas fa-eye me-1"></i>View
+                                </button>
+                                <button class="btn btn-sm btn-success flex-fill" onclick="editFarmhouse(${farmhouse.id})">
+                                    <i class="fas fa-edit me-1"></i>Edit
+                                </button>
+                                <button class="btn btn-sm btn-warning flex-fill" onclick="manageDates(${farmhouse.id}, '${farmhouse.name}')">
+                                    <i class="fas fa-calendar me-1"></i>Dates
+                                </button>
+                                <button class="btn btn-sm btn-danger flex-fill" onclick="deleteFarmhouse(${farmhouse.id})">
+                                    <i class="fas fa-trash me-1"></i>Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showAddFarmhouseModal() {
+            document.getElementById('modalTitle').textContent = 'Add New Farmhouse';
+            document.getElementById('farmhouseForm').reset();
+            document.getElementById('farmhouseId').value = '';
+            document.getElementById('availableFrom').valueAsDate = new Date();
+
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 30);
+            document.getElementById('availableTo').valueAsDate = tomorrow;
+
+            new bootstrap.Modal(document.getElementById('farmhouseModal')).show();
+        }
+
+        function editFarmhouse(id) {
+            const farmhouse = farmhouses.find(f => f.id === id);
+            if (!farmhouse) return;
+
+            document.getElementById('modalTitle').textContent = 'Edit Farmhouse';
+            document.getElementById('farmhouseId').value = farmhouse.id;
+            document.getElementById('name').value = farmhouse.name;
+            document.getElementById('location').value = farmhouse.location;
+            document.getElementById('bedrooms').value = farmhouse.bedrooms;
+            document.getElementById('bathrooms').value = farmhouse.bathrooms;
+            document.getElementById('maxGuests').value = farmhouse.maxGuests;
+            document.getElementById('description').value = farmhouse.description;
+            document.getElementById('price').value = farmhouse.price;
+            document.getElementById('weekendPrice').value = farmhouse.weekendPrice || '';
+            document.getElementById('availableFrom').value = farmhouse.availableFrom;
+            document.getElementById('availableTo').value = farmhouse.availableTo;
+            document.getElementById('blockedDates').value = farmhouse.blockedDates?.join(', ') || '';
+            document.getElementById('photoUrls').value = farmhouse.photoUrls?.join('\n') || '';
+
+            // Check amenities checkboxes
+            document.querySelectorAll('#photosAmenities input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = farmhouse.amenities?.includes(checkbox.value) || false;
+            });
+
+            new bootstrap.Modal(document.getElementById('farmhouseModal')).show();
+        }
+
+        function saveFarmhouse() {
+            const formData = {
+                id: document.getElementById('farmhouseId').value || Date.now(),
+                name: document.getElementById('name').value,
+                location: document.getElementById('location').value,
+                bedrooms: parseInt(document.getElementById('bedrooms').value),
+                bathrooms: parseInt(document.getElementById('bathrooms').value),
+                maxGuests: parseInt(document.getElementById('maxGuests').value),
+                description: document.getElementById('description').value,
+                price: parseFloat(document.getElementById('price').value),
+                weekendPrice: document.getElementById('weekendPrice').value ?
+                    parseFloat(document.getElementById('weekendPrice').value) : null,
+                availableFrom: document.getElementById('availableFrom').value,
+                availableTo: document.getElementById('availableTo').value,
+                blockedDates: document.getElementById('blockedDates').value ?
+                    document.getElementById('blockedDates').value.split(',').map(d => d.trim()).filter(d => d) : [],
+                photoUrls: document.getElementById('photoUrls').value ?
+                    document.getElementById('photoUrls').value.split('\n').map(url => url.trim()).filter(url => url) : [],
+                amenities: Array.from(document.querySelectorAll('#photosAmenities input[type="checkbox"]:checked'))
+                    .map(cb => cb.value),
+                createdAt: new Date().toISOString(),
+                lastUpdated: new Date().toISOString()
+            };
+
+            if (!formData.name || !formData.location || !formData.price) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            const existingIndex = farmhouses.findIndex(f => f.id == formData.id);
+            if (existingIndex >= 0) {
+                farmhouses[existingIndex] = { ...farmhouses[existingIndex], ...formData };
+            } else {
+                farmhouses.push(formData);
+            }
+
+            localStorage.setItem('farmhouses', JSON.stringify(farmhouses));
+            loadFarmhouses();
+            updateStatistics();
+
+            const modal = bootstrap.Modal.getInstance(document.getElementById('farmhouseModal'));
+            modal.hide();
+
+            showNotification('Farmhouse saved successfully!', 'success');
+        }
+
+        function deleteFarmhouse(id) {
+            if (confirm('Are you sure you want to delete this farmhouse?')) {
+                farmhouses = farmhouses.filter(f => f.id != id);
+                localStorage.setItem('farmhouses', JSON.stringify(farmhouses));
+                loadFarmhouses();
+                updateStatistics();
+                showNotification('Farmhouse deleted successfully!', 'warning');
+            }
+        }
+
+        function manageDates(id, name) {
+            const farmhouse = farmhouses.find(f => f.id === id);
+            if (!farmhouse) return;
+
+            document.getElementById('currentFarmhouseId').value = id;
+            document.getElementById('farmhouseNameDates').textContent = name;
+
+            // Update blocked dates list
+            const blockedList = document.getElementById('blockedDatesList');
+            if (farmhouse.blockedDates && farmhouse.blockedDates.length > 0) {
+                blockedList.innerHTML = farmhouse.blockedDates.map(date =>
+                    `<span class="badge bg-danger me-1 mb-1">${date}</span>`
+                ).join('');
+            } else {
+                blockedList.innerHTML = '<span class="text-muted">No dates blocked</span>';
+            }
+
+            new bootstrap.Modal(document.getElementById('datesModal')).show();
+        }
+
+        function blockSelectedDates() {
+            const farmhouseId = document.getElementById('currentFarmhouseId').value;
+            const dateRange = document.getElementById('dateRangePicker').value;
+
+            if (!dateRange) {
+                alert('Please select dates first.');
+                return;
+            }
+
+            const dates = dateRange.split(' to ');
+            let blockedDates = [];
+
+            if (dates.length === 2) {
+                const start = new Date(dates[0]);
+                const end = new Date(dates[1]);
+                const currentDate = new Date(start);
+
+                while (currentDate <= end) {
+                    blockedDates.push(currentDate.toISOString().split('T')[0]);
+                    currentDate.setDate(currentDate.getDate() + 1);
+                }
+            } else {
+                blockedDates.push(dates[0]);
+            }
+
+            const farmhouse = farmhouses.find(f => f.id == farmhouseId);
+            if (farmhouse) {
+                farmhouse.blockedDates = [...(farmhouse.blockedDates || []), ...blockedDates];
+                farmhouse.lastUpdated = new Date().toISOString();
+                localStorage.setItem('farmhouses', JSON.stringify(farmhouses));
+
+                // Update UI
+                manageDates(farmhouseId, farmhouse.name);
+                showNotification('Dates blocked successfully!', 'success');
+            }
+        }
+
+        function unblockSelectedDates() {
+            const farmhouseId = document.getElementById('currentFarmhouseId').value;
+            const dateRange = document.getElementById('dateRangePicker').value;
+
+            if (!dateRange) {
+                alert('Please select dates first.');
+                return;
+            }
+
+            const datesToUnblock = dateRange.includes(' to ') ?
+                dateRange.split(' to ') : [dateRange];
+
+            const farmhouse = farmhouses.find(f => f.id == farmhouseId);
+            if (farmhouse && farmhouse.blockedDates) {
+                farmhouse.blockedDates = farmhouse.blockedDates.filter(date =>
+                    !datesToUnblock.includes(date)
+                );
+                farmhouse.lastUpdated = new Date().toISOString();
+                localStorage.setItem('farmhouses', JSON.stringify(farmhouses));
+
+                // Update UI
+                manageDates(farmhouseId, farmhouse.name);
+                showNotification('Dates unblocked successfully!', 'success');
+            }
+        }
+
+        function viewFarmhouse(id) {
+            const farmhouse = farmhouses.find(f => f.id === id);
+            if (!farmhouse) return;
+
+            document.getElementById('detailsTitle').textContent = farmhouse.name;
+            document.getElementById('detailsLocation').textContent = farmhouse.location;
+            document.getElementById('detailsDescription').textContent = farmhouse.description;
+            document.getElementById('detailsBasePrice').textContent = `$${farmhouse.price}/night`;
+            document.getElementById('detailsWeekendPrice').textContent = farmhouse.weekendPrice ?
+                `$${farmhouse.weekendPrice}/night` : 'Same as base price';
+            document.getElementById('detailsAvailableFrom').textContent = formatDate(farmhouse.availableFrom);
+            document.getElementById('detailsAvailableTo').textContent = formatDate(farmhouse.availableTo);
+
+            // Set up amenities
+            const amenitiesContainer = document.getElementById('detailsAmenities');
+            amenitiesContainer.innerHTML = farmhouse.amenities.map(amenity =>
+                `<span class="amenity-tag">${amenity}</span>`
+            ).join('');
+
+            // Set up carousel
+            const carouselInner = document.getElementById('carouselInner');
+            const images = farmhouse.photoUrls && farmhouse.photoUrls.length > 0 ?
+                farmhouse.photoUrls :
+                ['https://images.unsplash.com/photo-1518780664697-55e3ad937233?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'];
+
+            carouselInner.innerHTML = images.map((img, index) => `
+                <div class="carousel-item ${index === 0 ? 'active' : ''}">
+                    <img src="${img}" class="d-block w-100" style="height: 400px; object-fit: cover;" alt="Farmhouse Image ${index + 1}">
+                </div>
+            `).join('');
+
+            new bootstrap.Modal(document.getElementById('detailsModal')).show();
+        }
+
+        function setViewMode(mode) {
+            const gridBtn = document.querySelector('[onclick="setViewMode(\'grid\')"]');
+            const listBtn = document.querySelector('[onclick="setViewMode(\'list\')"]');
+
+            gridBtn.classList.toggle('active', mode === 'grid');
+            listBtn.classList.toggle('active', mode === 'list');
+
+            // In a real app, you would implement list view here
+            // For now, we'll just show grid view
+        }
+
+        function updateStatistics() {
+            document.getElementById('total-farmhouses').textContent = farmhouses.length;
+
+            const today = new Date().toISOString().split('T')[0];
+            const availableCount = farmhouses.filter(f =>
+                f.availableFrom <= today && (!f.availableTo || f.availableTo >= today)
+            ).length;
+            document.getElementById('available-now').textContent = availableCount;
+
+            const totalRevenue = bookings.reduce((sum, b) => sum + b.totalAmount, 0);
+            document.getElementById('total-revenue').textContent = `$${totalRevenue}`;
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        function showNotification(message, type = 'info') {
+            // Create a simple notification
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+
+            document.body.appendChild(alertDiv);
+
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.remove();
+                }
+            }, 3000);
+        }
+
+        function exportData() {
+            const data = {
+                farmhouses: farmhouses,
+                bookings: bookings,
+                exportedAt: new Date().toISOString()
+            };
+
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `farmhouse-data-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+
+            showNotification('Data exported successfully!', 'info');
+        }
+
+        function loadSampleData() {
+            if (farmhouses.length === 0) {
+                farmhouses = [
+                    {
+                        id: 1,
+                        name: "Riverside Farm Retreat",
+                        location: "Blue Ridge Mountains, Virginia",
+                        bedrooms: 3,
+                        bathrooms: 2,
+                        maxGuests: 6,
+                        description: "Beautiful farmhouse overlooking the river with modern amenities and traditional charm. Perfect for family getaways.",
+                        price: 189,
+                        weekendPrice: 225,
+                        availableFrom: new Date().toISOString().split('T')[0],
+                        availableTo: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                        blockedDates: [],
+                        photoUrls: [
+                            "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                            "https://images.unsplash.com/photo-1568605114967-8130f3a36994?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                        ],
+                        amenities: ["WiFi", "Kitchen", "Parking", "Garden", "Pet Friendly"],
+                        createdAt: new Date().toISOString(),
+                        lastUpdated: new Date().toISOString()
+                    },
+                    {
+                        id: 2,
+                        name: "Sunset Valley Farm",
+                        location: "Shenandoah Valley, West Virginia",
+                        bedrooms: 4,
+                        bathrooms: 3,
+                        maxGuests: 8,
+                        description: "Luxury farmhouse with panoramic valley views, private pool, and premium amenities.",
+                        price: 275,
+                        weekendPrice: 325,
+                        availableFrom: new Date().toISOString().split('T')[0],
+                        availableTo: new Date(Date.now() + 120 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                        blockedDates: [],
+                        photoUrls: [
+                            "https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                        ],
+                        amenities: ["WiFi", "Pool", "Hot Tub", "Kitchen", "Parking", "AC"],
+                        createdAt: new Date().toISOString(),
+                        lastUpdated: new Date().toISOString()
+                    }
+                ];
+
+                localStorage.setItem('farmhouses', JSON.stringify(farmhouses));
+                loadFarmhouses();
+                updateStatistics();
+                showNotification('Sample data loaded successfully!', 'success');
+            } else {
+                showNotification('You already have farmhouses. Clear data first to load samples.', 'warning');
+            }
+        }
+    </script>
+</body>
+
+</html>
