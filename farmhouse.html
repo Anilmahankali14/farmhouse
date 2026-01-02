@@ -1,1056 +1,1529 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Farmhouse Rentals Pro | Management System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>MultiServices Connect - Complete Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         :root {
-            --primary: #2e7d32;
-            --primary-light: #4caf50;
-            --secondary: #ff9800;
-            --dark: #1b5e20;
-            --light: #f1f8e9;
+            --primary: #2E8B57;
+            --secondary: #FF6B35;
+            --accent: #4CC9F0;
+            --dark: #1A1A2E;
+            --light: #F8F9FA;
+            --gray: #6C757D;
+            --success: #28A745;
+            --warning: #FFC107;
+            --danger: #DC3545;
         }
 
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            min-height: 100vh;
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            overflow-x: hidden;
         }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        /* Header */
+        header {
+            background: linear-gradient(90deg, var(--dark) 0%, var(--primary) 100%);
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
-        .navbar-brand {
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--primary), var(--dark));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .login-btn {
+            background: var(--secondary);
+            padding: 10px 25px;
+            border-radius: 25px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255,107,53,0.4);
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 70px;
+            padding: 5rem 0;
+            background: linear-gradient(135deg, rgba(46,139,87,0.9), rgba(26,26,46,0.9)), 
+                        url('https://images.unsplash.com/photo-1551434678-e076c223a692?w=1600') center/cover;
+            color: white;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 1.2s;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            animation: fadeInUp 1.4s;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border: 2px solid white;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--dark));
-            border: none;
-            padding: 12px 28px;
-            border-radius: 12px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(46, 125, 50, 0.3);
-        }
-
-        .stat-card {
-            padding: 25px;
-            border-radius: 16px;
-            background: white;
-            border-left: 5px solid var(--primary);
-            transition: transform 0.3s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .farmhouse-card {
-            transition: all 0.3s ease;
-            border: none;
-            border-radius: 16px;
-            overflow: hidden;
-            height: 100%;
-        }
-
-        .farmhouse-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-        }
-
-        .farmhouse-img {
-            height: 250px;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-
-        .farmhouse-card:hover .farmhouse-img {
-            transform: scale(1.05);
-        }
-
-        .price-tag {
-            position: absolute;
-            top: 15px;
-            right: 15px;
             background: var(--secondary);
             color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: 700;
-            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+            border-color: var(--secondary);
         }
 
-        .availability-badge {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            padding: 6px 12px;
-            border-radius: 12px;
-            font-size: 0.8rem;
+        .btn-secondary {
+            background: transparent;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 3rem 0;
+            background: var(--primary);
+            color: white;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Services Section */
+        .services {
+            padding: 5rem 0;
+            background: var(--light);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            border-top: 4px solid var(--primary);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .service-card i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        /* Referral Section */
+        .referral {
+            padding: 5rem 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .referral-levels {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .level-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .level-amount {
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 1rem 0;
+        }
+
+        /* Calculator Section */
+        .calculator {
+            padding: 5rem 0;
+            background: white;
+        }
+
+        .calc-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--light);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .slider-group {
+            margin: 2rem 0;
+        }
+
+        .slider-group label {
+            display: block;
+            margin-bottom: 1rem;
             font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+        }
+
+        .result-box {
+            background: linear-gradient(135deg, var(--primary), #1A5D3A);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .result-box h3 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Registration Section */
+        .registration {
+            padding: 5rem 0;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .submit-btn {
+            background: var(--primary);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background: #26794A;
+            transform: translateY(-3px);
+        }
+
+        /* Payment Section */
+        .payment {
+            padding: 5rem 0;
+            background: var(--light);
+        }
+
+        .payment-box {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .qr-code {
+            width: 250px;
+            height: 250px;
+            margin: 2rem auto;
+            border: 3px solid var(--primary);
+            border-radius: 10px;
+        }
+
+        .upi-id {
+            background: var(--light);
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 1rem 0;
+            border: 2px dashed var(--primary);
+        }
+
+        .copy-btn {
+            background: var(--accent);
+            color: white;
+            padding: 10px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 10px;
+            transition: all 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: #3AB0D9;
+            transform: translateY(-2px);
+        }
+
+        /* Dashboard Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
 
         .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 1200px;
+            max-height: 90vh;
+            overflow-y: auto;
             border-radius: 20px;
+            position: relative;
+        }
+
+        .modal-header {
+            background: var(--primary);
+            color: white;
+            padding: 2rem;
+            border-radius: 20px 20px 0 0;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: white;
+            color: var(--primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             border: none;
-            overflow: hidden;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dashboard-content {
+            padding: 2rem;
+        }
+
+        .dashboard-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: var(--light);
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
         }
 
         .tab-content {
-            padding: 30px;
-            background: white;
-            border-radius: 0 0 20px 20px;
+            display: none;
         }
 
-        .nav-tabs .nav-link {
-            border: none;
-            padding: 15px 25px;
-            font-weight: 600;
-            color: #666;
+        .tab-content.active {
+            display: block;
         }
 
-        .nav-tabs .nav-link.active {
-            background: linear-gradient(135deg, var(--primary), var(--dark));
+        .stat-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary), #1A5D3A);
             color: white;
-            border-radius: 12px 12px 0 0;
+            padding: 1.5rem;
+            border-radius: 15px;
         }
 
-        .calendar-day {
-            padding: 10px;
-            border: 1px solid #dee2e6;
+        .stat-card h4 {
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: #ddd;
+            text-decoration: none;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            background: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #aaa;
+        }
+
+        /* WhatsApp Float */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #25D366;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 4px 20px rgba(37,211,102,0.5);
+            z-index: 1000;
             cursor: pointer;
-            transition: all 0.3s ease;
-            border-radius: 8px;
+            transition: all 0.3s;
         }
 
-        .calendar-day.available {
-            background: #e8f5e9;
-            color: #2e7d32;
+        .whatsapp-float:hover {
+            transform: scale(1.1);
         }
 
-        .calendar-day.booked {
-            background: #ffebee;
-            color: #c62828;
-            cursor: not-allowed;
-        }
-
-        .calendar-day.selected {
-            background: #bbdefb;
-            color: #1565c0;
-            transform: scale(1.05);
-        }
-
-        .amenity-tag {
-            display: inline-block;
-            background: #f5f5f5;
-            padding: 8px 16px;
-            margin: 4px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            border: 1px solid #e0e0e0;
-        }
-
-        @keyframes fadeIn {
+        /* Animations */
+        @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(30px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
 
-        .fade-in {
-            animation: fadeIn 0.5s ease forwards;
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .referral-levels { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
         }
 
-        .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--primary);
+        /* Alert Messages */
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 1rem 0;
+            animation: fadeInUp 0.5s;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid var(--success);
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border-left: 4px solid var(--accent);
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border-left: 4px solid var(--warning);
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--primary);
             border-radius: 50%;
+            width: 30px;
+            height: 30px;
             animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-left: 10px;
         }
 
         @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .data-table th {
+            background: var(--light);
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .data-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .badge-success { background: #d4edda; color: #155724; }
+        .badge-warning { background: #fff3cd; color: #856404; }
+        .badge-danger { background: #f8d7da; color: #721c24; }
     </style>
 </head>
-
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
+
+    <!-- WhatsApp Float Button -->
+    <a href="https://wa.me/919985943961?text=Hi%20I'm%20interested%20in%20joining%20MultiServices%20Connect" 
+       class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Header -->
+    <header>
         <div class="container">
-            <a class="navbar-brand fw-bold fs-3" href="#">
-                <i class="fas fa-home me-2"></i>Farmhouse Rentals Pro
-            </a>
-            <div class="navbar-nav ms-auto">
-                <button class="btn btn-primary" onclick="showAddFarmhouseModal()">
-                    <i class="fas fa-plus me-2"></i>Add Farmhouse
+            <nav>
+                <div class="logo">
+                    <i class="fas fa-network-wired"></i>
+                    Multi<span style="color: var(--secondary);">Connect</span>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#referral">Earnings</a></li>
+                    <li><a href="#payment">Payment</a></li>
+                    <li><a href="#registration">Join Now</a></li>
+                </ul>
+                <button class="login-btn" onclick="showDashboard()">
+                    <i class="fas fa-sign-in-alt"></i> Login / Dashboard
                 </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <h1>🚀 Your Gateway to Unlimited Opportunities</h1>
+            <p>Connect, Earn, and Grow with India's Largest Multi-Service Platform. From Farmhouses to Matrimony, Cars to Careers - We Connect Everything!</p>
+            <div class="cta-buttons">
+                <a href="#registration" class="btn btn-primary">Join Now - ₹150</a>
+                <a href="#referral" class="btn btn-secondary">See Earnings Plan</a>
             </div>
         </div>
-    </nav>
+    </section>
 
-    <!-- Main Container -->
-    <div class="container-fluid mt-5 pt-4">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="col-lg-3 mb-4">
-                <div class="glass-card p-4 mb-4">
-                    <h5 class="fw-bold mb-3 text-primary">
-                        <i class="fas fa-chart-line me-2"></i>Quick Stats
-                    </h5>
-                    <div class="stat-card mb-3">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <h6 class="text-muted">Total Farmhouses</h6>
-                                <h3 class="fw-bold" id="total-farmhouses">0</h3>
-                            </div>
-                            <i class="fas fa-home fa-2x text-primary"></i>
-                        </div>
-                    </div>
-                    <div class="stat-card mb-3">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <h6 class="text-muted">Available Now</h6>
-                                <h3 class="fw-bold" id="available-now">0</h3>
-                            </div>
-                            <i class="fas fa-calendar-check fa-2x text-success"></i>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <h6 class="text-muted">Total Revenue</h6>
-                                <h3 class="fw-bold" id="total-revenue">$0</h3>
-                            </div>
-                            <i class="fas fa-dollar-sign fa-2x text-warning"></i>
-                        </div>
-                    </div>
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h3>5000+</h3>
+                    <p>Active Members</p>
                 </div>
+                <div class="stat-item">
+                    <h3>₹10L+</h3>
+                    <p>Earnings Paid</p>
+                </div>
+                <div class="stat-item">
+                    <h3>15000+</h3>
+                    <p>Services Booked</p>
+                </div>
+                <div class="stat-item">
+                    <h3>98%</h3>
+                    <p>Satisfaction Rate</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-                <!-- Quick Actions -->
-                <div class="glass-card p-4">
-                    <h5 class="fw-bold mb-3 text-primary">
-                        <i class="fas fa-bolt me-2"></i>Quick Actions
-                    </h5>
-                    <div class="d-grid gap-2">
-                        <button class="btn btn-outline-primary" onclick="showAddFarmhouseModal()">
-                            <i class="fas fa-plus-circle me-2"></i>Add New Farmhouse
-                        </button>
-                        <button class="btn btn-outline-success" onclick="exportData()">
-                            <i class="fas fa-download me-2"></i>Export All Data
-                        </button>
-                        <button class="btn btn-outline-warning" onclick="loadSampleData()">
-                            <i class="fas fa-magic me-2"></i>Load Sample Data
-                        </button>
-                    </div>
+    <!-- Services Section -->
+    <section class="services" id="services">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Services</h2>
+                <p>Comprehensive solutions for every need</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <i class="fas fa-home"></i>
+                    <h3>Farm House</h3>
+                    <p>Premium farmhouse bookings for events, vacations, and getaways</p>
+                    <strong>Code: FH</strong>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-car"></i>
+                    <h3>Car Rentals</h3>
+                    <p>Daily, weekly, and monthly car rentals at best prices</p>
+                    <strong>Code: CR</strong>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-briefcase"></i>
+                    <h3>Property Sales</h3>
+                    <p>Buying and selling properties with expert guidance</p>
+                    <strong>Code: PS</strong>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-heart"></i>
+                    <h3>Matrimony</h3>
+                    <p>Trusted matrimonial services for perfect matches</p>
+                    <strong>Code: MRG</strong>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-stethoscope"></i>
+                    <h3>Medical Consultation</h3>
+                    <p>Online doctor consultation and medical services</p>
+                    <strong>Code: DOC</strong>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h3>Education</h3>
+                    <p>College admissions, tuitions, and online courses</p>
+                    <strong>Code: EDU</strong>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Referral Section -->
+    <section class="referral" id="referral">
+        <div class="container">
+            <div class="section-title">
+                <h2 style="color: white;">3-Level Referral Earnings 💰</h2>
+                <p style="color: rgba(255,255,255,0.9);">Earn from your team's success with our transparent multi-level system</p>
+            </div>
+            <div class="referral-levels">
+                <div class="level-card">
+                    <i class="fas fa-user" style="font-size: 2rem;"></i>
+                    <h3>Level 1</h3>
+                    <div class="level-amount">₹100</div>
+                    <p>Direct Referrals</p>
+                    <p style="opacity: 0.8;">For every person you directly refer</p>
+                </div>
+                <div class="level-card">
+                    <i class="fas fa-users" style="font-size: 2rem;"></i>
+                    <h3>Level 2</h3>
+                    <div class="level-amount">₹50</div>
+                    <p>Team Referrals</p>
+                    <p style="opacity: 0.8;">From your Level 1 team's referrals</p>
+                </div>
+                <div class="level-card">
+                    <i class="fas fa-network-wired" style="font-size: 2rem;"></i>
+                    <h3>Level 3</h3>
+                    <div class="level-amount">₹50</div>
+                    <p>Extended Network</p>
+                    <p style="opacity: 0.8;">From your Level 2 team's referrals</p>
+                </div>
+                <div class="level-card">
+                    <i class="fas fa-trophy" style="font-size: 2rem;"></i>
+                    <h3>Team Bonus</h3>
+                    <div class="level-amount" style="color: var(--warning);">₹10,000</div>
+                    <p>Achievement Reward</p>
+                    <p style="opacity: 0.8;">When your team reaches 100 members</p>
                 </div>
             </div>
 
-            <!-- Main Content -->
-            <div class="col-lg-9">
-                <!-- Header -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div>
-                        <h1 class="fw-bold text-dark">Farmhouse Management</h1>
-                        <p class="text-muted">Manage your properties, availability, and bookings</p>
-                    </div>
-                    <div class="btn-group">
-                        <button class="btn btn-outline-primary active" onclick="setViewMode('grid')">
-                            <i class="fas fa-th-large"></i>
-                        </button>
-                        <button class="btn btn-outline-primary" onclick="setViewMode('list')">
-                            <i class="fas fa-list"></i>
-                        </button>
-                    </div>
+            <div style="text-align: center; margin-top: 3rem; background: rgba(255,255,255,0.1); padding: 2rem; border-radius: 15px;">
+                <h3>Example Calculation:</h3>
+                <p style="font-size: 1.1rem; margin-top: 1rem;">If you refer <strong>5 people</strong>, each refers <strong>3 people</strong>, and each of those refers <strong>2 people</strong>:</p>
+                <p style="font-size: 1.3rem; margin-top: 1rem;">
+                    <strong>Total Earnings:</strong> (5 × ₹100) + (15 × ₹50) + (30 × ₹50) = <strong style="font-size: 1.8rem; color: var(--warning);">₹2,750</strong>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Calculator Section -->
+    <section class="calculator">
+        <div class="container">
+            <div class="section-title">
+                <h2>Earnings Calculator 🧮</h2>
+                <p>Calculate your potential earnings</p>
+            </div>
+            <div class="calc-container">
+                <div class="slider-group">
+                    <label>
+                        Direct Referrals (Level 1): <strong id="l1Value">5</strong>
+                    </label>
+                    <input type="range" id="l1Slider" class="slider" min="0" max="50" value="5" oninput="calculateEarnings()">
+                </div>
+                <div class="slider-group">
+                    <label>
+                        Level 2 Team Size: <strong id="l2Value">15</strong>
+                    </label>
+                    <input type="range" id="l2Slider" class="slider" min="0" max="100" value="15" oninput="calculateEarnings()">
+                </div>
+                <div class="slider-group">
+                    <label>
+                        Level 3 Team Size: <strong id="l3Value">30</strong>
+                    </label>
+                    <input type="range" id="l3Slider" class="slider" min="0" max="200" value="30" oninput="calculateEarnings()">
+                </div>
+                <div class="slider-group">
+                    <label>
+                        Monthly Service Bookings: <strong id="bookingsValue">10</strong>
+                    </label>
+                    <input type="range" id="bookingsSlider" class="slider" min="0" max="50" value="10" oninput="calculateEarnings()">
                 </div>
 
-                <!-- Farmhouses Grid View -->
-                <div class="row" id="farmhouses-grid">
-                    <!-- Farmhouses will be loaded here -->
+                <div class="result-box">
+                    <p style="opacity: 0.9;">Your Estimated Monthly Earnings</p>
+                    <h3>₹<span id="totalEarnings">0</span></h3>
+                    <p style="opacity: 0.9; margin-top: 1rem;">
+                        Referrals: ₹<span id="referralEarnings">0</span> | 
+                        Commissions: ₹<span id="commissionEarnings">0</span> | 
+                        Salary: ₹5,000
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Payment Section -->
+    <section class="payment" id="payment">
+        <div class="container">
+            <div class="section-title">
+                <h2>Registration Payment - ₹150</h2>
+                <p>One-time registration fee to unlock all benefits</p>
+            </div>
+            <div class="payment-box">
+                <h3><i class="fas fa-qrcode"></i> Scan QR Code or Use UPI ID</h3>
+                <img src="https://github.com/earningsprogram777/time-pass/blob/main/qr%20code.jpeg?raw=true" 
+                     alt="Payment QR Code" class="qr-code">
+
+                <div class="upi-id">
+                    <i class="fas fa-university"></i> earning777@ptaxis
                 </div>
 
-                <!-- Loading State -->
-                <div id="loading-state" class="text-center py-5">
-                    <div class="loading-spinner mx-auto mb-3"></div>
-                    <p class="text-muted">Loading farmhouses...</p>
-                </div>
-
-                <!-- Empty State -->
-                <div id="empty-state" class="text-center py-5" style="display: none;">
-                    <i class="fas fa-home fa-4x text-muted mb-4"></i>
-                    <h4 class="text-muted mb-3">No Farmhouses Yet</h4>
-                    <p class="text-muted mb-4">Start by adding your first farmhouse property</p>
-                    <button class="btn btn-primary" onclick="showAddFarmhouseModal()">
-                        <i class="fas fa-plus me-2"></i>Add First Farmhouse
+                <div>
+                    <button class="copy-btn" onclick="copyUPI()">
+                        <i class="fas fa-copy"></i> Copy UPI ID
+                    </button>
+                    <button class="copy-btn" style="background: #25D366;" onclick="sendWhatsApp()">
+                        <i class="fab fa-whatsapp"></i> WhatsApp Payment Proof
                     </button>
                 </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Add/Edit Farmhouse Modal -->
-    <div class="modal fade" id="farmhouseModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="modalTitle">Add New Farmhouse</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="farmhouseForm">
-                        <input type="hidden" id="farmhouseId">
-
-                        <!-- Tabs -->
-                        <ul class="nav nav-tabs mb-3" id="formTabs">
-                            <li class="nav-item">
-                                <a class="nav-link active" data-bs-toggle="tab" href="#basicInfo">
-                                    <i class="fas fa-info-circle me-2"></i>Basic Info
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" data-bs-toggle="tab" href="#pricingDates">
-                                    <i class="fas fa-calendar-alt me-2"></i>Pricing & Dates
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" data-bs-toggle="tab" href="#photosAmenities">
-                                    <i class="fas fa-images me-2"></i>Photos & Amenities
-                                </a>
-                            </li>
-                        </ul>
-
-                        <!-- Tab Content -->
-                        <div class="tab-content">
-                            <!-- Basic Info Tab -->
-                            <div class="tab-pane fade show active" id="basicInfo">
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label fw-bold">Farmhouse Name *</label>
-                                        <input type="text" class="form-control" id="name" required>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label fw-bold">Location *</label>
-                                        <input type="text" class="form-control" id="location" required>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4 mb-3">
-                                        <label class="form-label fw-bold">Bedrooms *</label>
-                                        <input type="number" class="form-control" id="bedrooms" required min="1">
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <label class="form-label fw-bold">Bathrooms *</label>
-                                        <input type="number" class="form-control" id="bathrooms" required min="1">
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <label class="form-label fw-bold">Max Guests *</label>
-                                        <input type="number" class="form-control" id="maxGuests" required min="1">
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label fw-bold">Description *</label>
-                                    <textarea class="form-control" id="description" rows="4" required></textarea>
-                                </div>
-                            </div>
-
-                            <!-- Pricing & Dates Tab -->
-                            <div class="tab-pane fade" id="pricingDates">
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label fw-bold">Base Price/Night ($) *</label>
-                                        <input type="number" class="form-control" id="price" required min="0"
-                                            step="0.01">
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label fw-bold">Weekend Price ($)</label>
-                                        <input type="number" class="form-control" id="weekendPrice" min="0" step="0.01">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label fw-bold">Available From *</label>
-                                        <input type="date" class="form-control" id="availableFrom" required>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label fw-bold">Available To *</label>
-                                        <input type="date" class="form-control" id="availableTo" required>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label fw-bold">Blocked Dates</label>
-                                    <input type="text" class="form-control" id="blockedDates"
-                                        placeholder="Enter dates separated by commas (YYYY-MM-DD)">
-                                    <small class="text-muted">Example: 2024-12-25, 2024-12-31</small>
-                                </div>
-                            </div>
-
-                            <!-- Photos & Amenities Tab -->
-                            <div class="tab-pane fade" id="photosAmenities">
-                                <div class="mb-3">
-                                    <label class="form-label fw-bold">Photo URLs</label>
-                                    <textarea class="form-control" id="photoUrls" rows="3"
-                                        placeholder="Enter image URLs (one per line)">
-                                    </textarea>
-                                    <small class="text-muted">Add multiple image URLs for a slideshow</small>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label fw-bold">Select Amenities</label>
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" value="WiFi">
-                                                <label class="form-check-label">High-Speed WiFi</label>
-                                            </div>
-                                            <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" value="Pool">
-                                                <label class="form-check-label">Swimming Pool</label>
-                                            </div>
-                                            <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" value="Kitchen">
-                                                <label class="form-check-label">Full Kitchen</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" value="Parking">
-                                                <label class="form-check-label">Free Parking</label>
-                                            </div>
-                                            <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" value="AC">
-                                                <label class="form-check-label">Air Conditioning</label>
-                                            </div>
-                                            <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" value="Garden">
-                                                <label class="form-check-label">Garden</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" value="BBQ">
-                                                <label class="form-check-label">BBQ Area</label>
-                                            </div>
-                                            <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" value="Pet Friendly">
-                                                <label class="form-check-label">Pet Friendly</label>
-                                            </div>
-                                            <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" value="Fireplace">
-                                                <label class="form-check-label">Fireplace</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="d-flex justify-content-between mt-4 pt-3 border-top">
-                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                                Cancel
-                            </button>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save me-2"></i>Save Farmhouse
-                            </button>
-                        </div>
-                    </form>
+                <div class="alert alert-warning" style="text-align: left; margin-top: 2rem;">
+                    <strong><i class="fas fa-info-circle"></i> Important Steps:</strong>
+                    <ol style="margin-top: 10px; padding-left: 20px;">
+                        <li>Pay ₹150 using above UPI ID</li>
+                        <li>Take screenshot of payment confirmation</li>
+                        <li>Fill registration form below</li>
+                        <li>Send payment screenshot on WhatsApp</li>
+                    </ol>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Manage Dates Modal -->
-    <div class="modal fade" id="datesModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title">Manage Availability</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" id="currentFarmhouseId">
-                    <h6 id="farmhouseNameDates" class="mb-3"></h6>
-
-                    <div class="mb-3">
-                        <label class="form-label">Select Dates to Block/Unblock</label>
-                        <input type="text" class="form-control" id="dateRangePicker" placeholder="Select date range">
-                    </div>
-
-                    <div class="row g-2">
-                        <div class="col-6">
-                            <button class="btn btn-danger w-100" onclick="blockSelectedDates()">
-                                <i class="fas fa-ban me-2"></i>Block Dates
-                            </button>
+    <!-- Registration Section -->
+    <section class="registration" id="registration">
+        <div class="container">
+            <div class="section-title" style="color: white;">
+                <h2>Complete Your Registration 📝</h2>
+                <p>Fill this form after making payment</p>
+            </div>
+            <div class="form-container">
+                <form id="registrationForm" onsubmit="handleSubmit(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Full Name *</label>
+                            <input type="text" id="name" required placeholder="Enter your full name">
                         </div>
-                        <div class="col-6">
-                            <button class="btn btn-success w-100" onclick="unblockSelectedDates()">
-                                <i class="fas fa-check me-2"></i>Unblock Dates
-                            </button>
+                        <div class="form-group">
+                            <label>Age *</label>
+                            <input type="number" id="age" required min="18" max="60" placeholder="Your age">
                         </div>
                     </div>
 
-                    <div class="mt-4">
-                        <h6 class="mb-2">Blocked Dates</h6>
-                        <div id="blockedDatesList" class="p-3 bg-light rounded">
-                            <!-- Blocked dates will be shown here -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>WhatsApp Number *</label>
+                            <input type="tel" id="phone" required pattern="[0-9]{10}" placeholder="10-digit number">
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" id="email" placeholder="Your email (optional)">
                         </div>
                     </div>
-                </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>City & State *</label>
+                            <input type="text" id="location" required placeholder="e.g., Mumbai, Maharashtra">
+                        </div>
+                        <div class="form-group">
+                            <label>Qualification *</label>
+                            <select id="qualification" required>
+                                <option value="">Select</option>
+                                <option value="10th">10th Pass</option>
+                                <option value="12th">12th Pass</option>
+                                <option value="graduate">Graduate</option>
+                                <option value="postgraduate">Post Graduate</option>
+                                <option value="diploma">Diploma</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Service Interest *</label>
+                            <select id="interest" required>
+                                <option value="">Select Service</option>
+                                <option value="FH">Farm House Bookings</option>
+                                <option value="CR">Car Rentals</option>
+                                <option value="PS">Property Sales</option>
+                                <option value="MRG">Matrimony Services</option>
+                                <option value="EDU">Education Services</option>
+                                <option value="ALL">All Services</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Referral Code (Optional)</label>
+                            <input type="text" id="referralCode" placeholder="If someone referred you">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>UPI Transaction ID *</label>
+                        <input type="text" id="transactionId" required placeholder="e.g., 123456789012">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Why do you want to join us? *</label>
+                        <textarea id="message" rows="3" required placeholder="Tell us about your goals..."></textarea>
+                    </div>
+
+                    <div id="responseMessage"></div>
+
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i> Submit Registration
+                    </button>
+                </form>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- View Details Modal -->
-    <div class="modal fade" id="detailsModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="detailsTitle"></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>About Us</h3>
+                    <p>MultiServices Connect is India's premier multi-service platform connecting people with opportunities.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
                 </div>
-                <div class="modal-body">
-                    <div id="detailsCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
-                        <div class="carousel-inner rounded" id="carouselInner">
-                            <!-- Images will be loaded here -->
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#referral">Earnings Plan</a></li>
+                        <li><a href="#registration">Join Now</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Services</h3>
+                    <ul>
+                        <li><a href="#">Farm House Bookings</a></li>
+                        <li><a href="#">Car Rentals</a></li>
+                        <li><a href="#">Property Sales</a></li>
+                        <li><a href="#">Matrimony</a></li>
+                        <li><a href="#">Medical Consultation</a></li>
+                        <li><a href="#">Education Services</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <ul>
+                        <li><i class="fas fa-phone"></i> +91 9985943961</li>
+                        <li><i class="fas fa-envelope"></i> support@multiconnect.com</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Andhra Pradesh, India</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2026 MultiServices Connect. All rights reserved. | <a href="#" style="color: var(--accent);">Privacy Policy</a> | <a href="#" style="color: var(--accent);">Terms & Conditions</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Dashboard Modal -->
+    <div id="dashboardModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-tachometer-alt"></i> User Dashboard</h2>
+                <button class="close-modal" onclick="closeDashboard()">&times;</button>
+            </div>
+            <div class="dashboard-content">
+                <div class="alert alert-info">
+                    <strong>Demo Mode:</strong> This is a demo dashboard. In production, users will login to see their real data.
+                    <br><strong>Demo Login:</strong> Phone: 9999999999 | Password: demo123
+                </div>
+
+                <div class="dashboard-tabs">
+                    <button class="tab-btn active" onclick="showTab('overview')">Overview</button>
+                    <button class="tab-btn" onclick="showTab('referrals')">My Referrals</button>
+                    <button class="tab-btn" onclick="showTab('earnings')">Earnings</button>
+                    <button class="tab-btn" onclick="showTab('bookings')">Bookings</button>
+                    <button class="tab-btn" onclick="showTab('wallet')">Wallet</button>
+                    <button class="tab-btn" onclick="showTab('profile')">Profile</button>
+                </div>
+
+                <!-- Overview Tab -->
+                <div id="overview" class="tab-content active">
+                    <h3>Dashboard Overview</h3>
+                    <div class="stat-cards">
+                        <div class="stat-card">
+                            <h4>Total Earnings</h4>
+                            <div class="value">₹12,500</div>
+                            <p>+15% this month</p>
                         </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#detailsCarousel"
-                            data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon"></span>
+                        <div class="stat-card" style="background: linear-gradient(135deg, #FF6B35, #E55A2B);">
+                            <h4>Available Balance</h4>
+                            <div class="value">₹8,300</div>
+                            <p>Ready to withdraw</p>
+                        </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, #4CC9F0, #3AB0D9);">
+                            <h4>Total Referrals</h4>
+                            <div class="value">15</div>
+                            <p>Across all levels</p>
+                        </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, #FFC107, #E0A800);">
+                            <h4>Service Bookings</h4>
+                            <div class="value">8</div>
+                            <p>This month</p>
+                        </div>
+                    </div>
+
+                    <h4>Recent Activity</h4>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Activity</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Jan 2, 2026</td>
+                                <td>Level 1 Referral - John Doe</td>
+                                <td>₹100</td>
+                                <td><span class="badge badge-success">Credited</span></td>
+                            </tr>
+                            <tr>
+                                <td>Jan 1, 2026</td>
+                                <td>Farmhouse Booking Commission</td>
+                                <td>₹750</td>
+                                <td><span class="badge badge-success">Credited</span></td>
+                            </tr>
+                            <tr>
+                                <td>Dec 30, 2025</td>
+                                <td>Level 2 Referral - Jane Smith</td>
+                                <td>₹50</td>
+                                <td><span class="badge badge-success">Credited</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Referrals Tab -->
+                <div id="referrals" class="tab-content">
+                    <h3>My Referral Network</h3>
+                    <div class="alert alert-info">
+                        <strong>Your Referral Code:</strong> DEMO2026
+                        <button class="copy-btn" style="margin-left: 15px;" onclick="copyText('DEMO2026')">
+                            <i class="fas fa-copy"></i> Copy Code
                         </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#detailsCarousel"
-                            data-bs-slide="next">
-                            <span class="carousel-control-next-icon"></span>
-                        </button>
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-8">
-                            <h6 class="text-muted mb-2">
-                                <i class="fas fa-map-marker-alt text-danger me-2"></i>
-                                <span id="detailsLocation"></span>
-                            </h6>
-                            <p id="detailsDescription" class="mb-3"></p>
+                    <div class="stat-cards">
+                        <div class="stat-card">
+                            <h4>Level 1 (Direct)</h4>
+                            <div class="value">5</div>
+                            <p>Earned: ₹500</p>
+                        </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, #4CC9F0, #3AB0D9);">
+                            <h4>Level 2 (Team)</h4>
+                            <div class="value">7</div>
+                            <p>Earned: ₹350</p>
+                        </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, #FF6B35, #E55A2B);">
+                            <h4>Level 3 (Network)</h4>
+                            <div class="value">3</div>
+                            <p>Earned: ₹150</p>
+                        </div>
+                    </div>
 
-                            <div class="mb-3">
-                                <h6>Amenities</h6>
-                                <div id="detailsAmenities"></div>
-                            </div>
+                    <h4>Level 1 - Direct Referrals</h4>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Joined Date</th>
+                                <th>Status</th>
+                                <th>Commission</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>John Doe</td>
+                                <td>9876543210</td>
+                                <td>Jan 2, 2026</td>
+                                <td><span class="badge badge-success">Active</span></td>
+                                <td>₹100</td>
+                            </tr>
+                            <tr>
+                                <td>Jane Smith</td>
+                                <td>9876543211</td>
+                                <td>Dec 28, 2025</td>
+                                <td><span class="badge badge-success">Active</span></td>
+                                <td>₹100</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Earnings Tab -->
+                <div id="earnings" class="tab-content">
+                    <h3>My Earnings</h3>
+                    <div class="stat-cards">
+                        <div class="stat-card">
+                            <h4>Referral Income</h4>
+                            <div class="value">₹1,000</div>
+                            <p>From 15 referrals</p>
                         </div>
-                        <div class="col-md-4">
-                            <div class="card bg-light">
-                                <div class="card-body">
-                                    <h6 class="card-title">Pricing Details</h6>
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <span>Base Price:</span>
-                                        <strong id="detailsBasePrice"></strong>
-                                    </div>
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <span>Weekend Price:</span>
-                                        <strong id="detailsWeekendPrice"></strong>
-                                    </div>
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <span>Available From:</span>
-                                        <span id="detailsAvailableFrom"></span>
-                                    </div>
-                                    <div class="d-flex justify-content-between">
-                                        <span>Available To:</span>
-                                        <span id="detailsAvailableTo"></span>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, #FF6B35, #E55A2B);">
+                            <h4>Service Commission</h4>
+                            <div class="value">₹6,500</div>
+                            <p>From 8 bookings</p>
                         </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, #4CC9F0, #3AB0D9);">
+                            <h4>Monthly Salary</h4>
+                            <div class="value">₹5,000</div>
+                            <p>Base salary</p>
+                        </div>
+                    </div>
+
+                    <h4>Earnings History</h4>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Jan 2, 2026</td>
+                                <td>Level 1 Referral</td>
+                                <td>John Doe joined</td>
+                                <td>₹100</td>
+                            </tr>
+                            <tr>
+                                <td>Jan 1, 2026</td>
+                                <td>Service Commission</td>
+                                <td>Farmhouse booking</td>
+                                <td>₹750</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Bookings Tab -->
+                <div id="bookings" class="tab-content">
+                    <h3>My Service Bookings</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Booking ID</th>
+                                <th>Service</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Commission</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>BK2026001</td>
+                                <td>Farmhouse</td>
+                                <td>Jan 1, 2026</td>
+                                <td>₹5,000</td>
+                                <td>₹750</td>
+                                <td><span class="badge badge-success">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>BK2026002</td>
+                                <td>Car Rental</td>
+                                <td>Dec 28, 2025</td>
+                                <td>₹3,000</td>
+                                <td>₹300</td>
+                                <td><span class="badge badge-success">Completed</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Wallet Tab -->
+                <div id="wallet" class="tab-content">
+                    <h3>My Wallet</h3>
+                    <div class="stat-cards">
+                        <div class="stat-card">
+                            <h4>Total Earnings</h4>
+                            <div class="value">₹12,500</div>
+                        </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, #28A745, #218838);">
+                            <h4>Available Balance</h4>
+                            <div class="value">₹8,300</div>
+                        </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, #FFC107, #E0A800);">
+                            <h4>Pending</h4>
+                            <div class="value">₹2,200</div>
+                        </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, #DC3545, #C82333);">
+                            <h4>Withdrawn</h4>
+                            <div class="value">₹2,000</div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <strong>Withdrawal Info:</strong> Minimum withdrawal: ₹500 | Processing time: 2-3 business days
+                    </div>
+
+                    <button class="btn btn-primary" onclick="alert('Withdrawal feature will be available after backend integration')">
+                        <i class="fas fa-money-bill-wave"></i> Request Withdrawal
+                    </button>
+                </div>
+
+                <!-- Profile Tab -->
+                <div id="profile" class="tab-content">
+                    <h3>My Profile</h3>
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" value="Demo User" readonly>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="text" value="9999999999" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="text" value="demo@example.com" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Referral Code</label>
+                        <input type="text" value="DEMO2026" readonly>
+                    </div>
+                    <div class="alert alert-success">
+                        <strong>Account Status:</strong> Active & Verified ✓
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
-        // Data storage
-        let farmhouses = JSON.parse(localStorage.getItem('farmhouses')) || [];
-        let bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+        // Calculator
+        function calculateEarnings() {
+            const l1 = parseInt(document.getElementById('l1Slider').value);
+            const l2 = parseInt(document.getElementById('l2Slider').value);
+            const l3 = parseInt(document.getElementById('l3Slider').value);
+            const bookings = parseInt(document.getElementById('bookingsSlider').value);
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function () {
-            loadFarmhouses();
-            setupEventListeners();
-            initDatePickers();
-            updateStatistics();
-        });
+            document.getElementById('l1Value').textContent = l1;
+            document.getElementById('l2Value').textContent = l2;
+            document.getElementById('l3Value').textContent = l3;
+            document.getElementById('bookingsValue').textContent = bookings;
 
-        function setupEventListeners() {
-            // Farmhouse form submission
-            document.getElementById('farmhouseForm').addEventListener('submit', function (e) {
-                e.preventDefault();
-                saveFarmhouse();
-            });
+            const referralEarnings = (l1 * 100) + (l2 * 50) + (l3 * 50);
+            const commissionEarnings = bookings * 500; // Average ₹500 per booking
+            const salary = 5000;
+            const total = referralEarnings + commissionEarnings + salary;
+
+            document.getElementById('referralEarnings').textContent = referralEarnings.toLocaleString();
+            document.getElementById('commissionEarnings').textContent = commissionEarnings.toLocaleString();
+            document.getElementById('totalEarnings').textContent = total.toLocaleString();
         }
 
-        function initDatePickers() {
-            flatpickr("#availableFrom", {
-                minDate: "today"
-            });
-
-            flatpickr("#availableTo", {
-                minDate: "today"
-            });
-
-            flatpickr("#dateRangePicker", {
-                mode: "range",
-                dateFormat: "Y-m-d",
-                minDate: "today"
-            });
+        // Copy UPI
+        function copyUPI() {
+            navigator.clipboard.writeText('earning777@ptaxis');
+            alert('UPI ID copied: earning777@ptaxis');
         }
 
-        function loadFarmhouses() {
-            const loading = document.getElementById('loading-state');
-            const empty = document.getElementById('empty-state');
-            const grid = document.getElementById('farmhouses-grid');
-
-            if (farmhouses.length === 0) {
-                loading.style.display = 'none';
-                empty.style.display = 'block';
-                grid.innerHTML = '';
-                return;
-            }
-
-            loading.style.display = 'none';
-            empty.style.display = 'none';
-
-            grid.innerHTML = farmhouses.map(farmhouse => createFarmhouseCard(farmhouse)).join('');
+        // Send WhatsApp
+        function sendWhatsApp() {
+            window.open('https://wa.me/919985943961?text=Hi! I have completed my registration payment of ₹150. Here is my payment screenshot.', '_blank');
         }
 
-        function createFarmhouseCard(farmhouse) {
-            const mainImage = farmhouse.photoUrls && farmhouse.photoUrls.length > 0
-                ? farmhouse.photoUrls[0]
-                : 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
-
-            const today = new Date();
-            const availableFrom = new Date(farmhouse.availableFrom);
-            const isAvailable = today >= availableFrom;
-
-            return `
-                <div class="col-lg-4 col-md-6 mb-4 fade-in">
-                    <div class="farmhouse-card glass-card">
-                        <div class="position-relative overflow-hidden">
-                            <img src="${mainImage}" class="farmhouse-img w-100" alt="${farmhouse.name}">
-                            <div class="price-tag">$${farmhouse.price}/night</div>
-                            <div class="availability-badge ${isAvailable ? 'bg-success' : 'bg-warning'} text-white">
-                                ${isAvailable ? 'Available' : 'Coming Soon'}
-                            </div>
-                        </div>
-                        <div class="p-4">
-                            <h5 class="fw-bold mb-2">${farmhouse.name}</h5>
-                            <p class="text-muted mb-3">
-                                <i class="fas fa-map-marker-alt text-danger me-1"></i>
-                                ${farmhouse.location}
-                            </p>
-                            <div class="d-flex justify-content-between text-muted mb-3">
-                                <small><i class="fas fa-bed me-1"></i>${farmhouse.bedrooms} beds</small>
-                                <small><i class="fas fa-bath me-1"></i>${farmhouse.bathrooms} baths</small>
-                                <small><i class="fas fa-users me-1"></i>${farmhouse.maxGuests} guests</small>
-                            </div>
-                            <p class="small text-muted mb-3">${farmhouse.description.substring(0, 100)}...</p>
-                            
-                            <div class="amenities mb-3">
-                                ${farmhouse.amenities.slice(0, 3).map(amenity =>
-                `<span class="amenity-tag">${amenity}</span>`
-            ).join('')}
-                                ${farmhouse.amenities.length > 3 ?
-                    `<span class="amenity-tag">+${farmhouse.amenities.length - 3} more</span>` : ''
-                }
-                            </div>
-                            
-                            <div class="d-flex gap-2">
-                                <button class="btn btn-sm btn-primary flex-fill" onclick="viewFarmhouse(${farmhouse.id})">
-                                    <i class="fas fa-eye me-1"></i>View
-                                </button>
-                                <button class="btn btn-sm btn-success flex-fill" onclick="editFarmhouse(${farmhouse.id})">
-                                    <i class="fas fa-edit me-1"></i>Edit
-                                </button>
-                                <button class="btn btn-sm btn-warning flex-fill" onclick="manageDates(${farmhouse.id}, '${farmhouse.name}')">
-                                    <i class="fas fa-calendar me-1"></i>Dates
-                                </button>
-                                <button class="btn btn-sm btn-danger flex-fill" onclick="deleteFarmhouse(${farmhouse.id})">
-                                    <i class="fas fa-trash me-1"></i>Delete
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
+        // Copy Text
+        function copyText(text) {
+            navigator.clipboard.writeText(text);
+            alert('Copied: ' + text);
         }
 
-        function showAddFarmhouseModal() {
-            document.getElementById('modalTitle').textContent = 'Add New Farmhouse';
-            document.getElementById('farmhouseForm').reset();
-            document.getElementById('farmhouseId').value = '';
-            document.getElementById('availableFrom').valueAsDate = new Date();
+        // Form Submit
+        function handleSubmit(e) {
+            e.preventDefault();
 
-            const tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 30);
-            document.getElementById('availableTo').valueAsDate = tomorrow;
-
-            new bootstrap.Modal(document.getElementById('farmhouseModal')).show();
-        }
-
-        function editFarmhouse(id) {
-            const farmhouse = farmhouses.find(f => f.id === id);
-            if (!farmhouse) return;
-
-            document.getElementById('modalTitle').textContent = 'Edit Farmhouse';
-            document.getElementById('farmhouseId').value = farmhouse.id;
-            document.getElementById('name').value = farmhouse.name;
-            document.getElementById('location').value = farmhouse.location;
-            document.getElementById('bedrooms').value = farmhouse.bedrooms;
-            document.getElementById('bathrooms').value = farmhouse.bathrooms;
-            document.getElementById('maxGuests').value = farmhouse.maxGuests;
-            document.getElementById('description').value = farmhouse.description;
-            document.getElementById('price').value = farmhouse.price;
-            document.getElementById('weekendPrice').value = farmhouse.weekendPrice || '';
-            document.getElementById('availableFrom').value = farmhouse.availableFrom;
-            document.getElementById('availableTo').value = farmhouse.availableTo;
-            document.getElementById('blockedDates').value = farmhouse.blockedDates?.join(', ') || '';
-            document.getElementById('photoUrls').value = farmhouse.photoUrls?.join('\n') || '';
-
-            // Check amenities checkboxes
-            document.querySelectorAll('#photosAmenities input[type="checkbox"]').forEach(checkbox => {
-                checkbox.checked = farmhouse.amenities?.includes(checkbox.value) || false;
-            });
-
-            new bootstrap.Modal(document.getElementById('farmhouseModal')).show();
-        }
-
-        function saveFarmhouse() {
             const formData = {
-                id: document.getElementById('farmhouseId').value || Date.now(),
                 name: document.getElementById('name').value,
+                age: document.getElementById('age').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
                 location: document.getElementById('location').value,
-                bedrooms: parseInt(document.getElementById('bedrooms').value),
-                bathrooms: parseInt(document.getElementById('bathrooms').value),
-                maxGuests: parseInt(document.getElementById('maxGuests').value),
-                description: document.getElementById('description').value,
-                price: parseFloat(document.getElementById('price').value),
-                weekendPrice: document.getElementById('weekendPrice').value ?
-                    parseFloat(document.getElementById('weekendPrice').value) : null,
-                availableFrom: document.getElementById('availableFrom').value,
-                availableTo: document.getElementById('availableTo').value,
-                blockedDates: document.getElementById('blockedDates').value ?
-                    document.getElementById('blockedDates').value.split(',').map(d => d.trim()).filter(d => d) : [],
-                photoUrls: document.getElementById('photoUrls').value ?
-                    document.getElementById('photoUrls').value.split('\n').map(url => url.trim()).filter(url => url) : [],
-                amenities: Array.from(document.querySelectorAll('#photosAmenities input[type="checkbox"]:checked'))
-                    .map(cb => cb.value),
-                createdAt: new Date().toISOString(),
-                lastUpdated: new Date().toISOString()
+                qualification: document.getElementById('qualification').value,
+                interest: document.getElementById('interest').value,
+                referralCode: document.getElementById('referralCode').value,
+                transactionId: document.getElementById('transactionId').value,
+                message: document.getElementById('message').value
             };
 
-            if (!formData.name || !formData.location || !formData.price) {
-                alert('Please fill in all required fields.');
-                return;
-            }
+            // Generate referral code
+            const userCode = formData.name.substring(0,4).toUpperCase() + formData.phone.substring(6,10);
 
-            const existingIndex = farmhouses.findIndex(f => f.id == formData.id);
-            if (existingIndex >= 0) {
-                farmhouses[existingIndex] = { ...farmhouses[existingIndex], ...formData };
-            } else {
-                farmhouses.push(formData);
-            }
-
-            localStorage.setItem('farmhouses', JSON.stringify(farmhouses));
-            loadFarmhouses();
-            updateStatistics();
-
-            const modal = bootstrap.Modal.getInstance(document.getElementById('farmhouseModal'));
-            modal.hide();
-
-            showNotification('Farmhouse saved successfully!', 'success');
-        }
-
-        function deleteFarmhouse(id) {
-            if (confirm('Are you sure you want to delete this farmhouse?')) {
-                farmhouses = farmhouses.filter(f => f.id != id);
-                localStorage.setItem('farmhouses', JSON.stringify(farmhouses));
-                loadFarmhouses();
-                updateStatistics();
-                showNotification('Farmhouse deleted successfully!', 'warning');
-            }
-        }
-
-        function manageDates(id, name) {
-            const farmhouse = farmhouses.find(f => f.id === id);
-            if (!farmhouse) return;
-
-            document.getElementById('currentFarmhouseId').value = id;
-            document.getElementById('farmhouseNameDates').textContent = name;
-
-            // Update blocked dates list
-            const blockedList = document.getElementById('blockedDatesList');
-            if (farmhouse.blockedDates && farmhouse.blockedDates.length > 0) {
-                blockedList.innerHTML = farmhouse.blockedDates.map(date =>
-                    `<span class="badge bg-danger me-1 mb-1">${date}</span>`
-                ).join('');
-            } else {
-                blockedList.innerHTML = '<span class="text-muted">No dates blocked</span>';
-            }
-
-            new bootstrap.Modal(document.getElementById('datesModal')).show();
-        }
-
-        function blockSelectedDates() {
-            const farmhouseId = document.getElementById('currentFarmhouseId').value;
-            const dateRange = document.getElementById('dateRangePicker').value;
-
-            if (!dateRange) {
-                alert('Please select dates first.');
-                return;
-            }
-
-            const dates = dateRange.split(' to ');
-            let blockedDates = [];
-
-            if (dates.length === 2) {
-                const start = new Date(dates[0]);
-                const end = new Date(dates[1]);
-                const currentDate = new Date(start);
-
-                while (currentDate <= end) {
-                    blockedDates.push(currentDate.toISOString().split('T')[0]);
-                    currentDate.setDate(currentDate.getDate() + 1);
-                }
-            } else {
-                blockedDates.push(dates[0]);
-            }
-
-            const farmhouse = farmhouses.find(f => f.id == farmhouseId);
-            if (farmhouse) {
-                farmhouse.blockedDates = [...(farmhouse.blockedDates || []), ...blockedDates];
-                farmhouse.lastUpdated = new Date().toISOString();
-                localStorage.setItem('farmhouses', JSON.stringify(farmhouses));
-
-                // Update UI
-                manageDates(farmhouseId, farmhouse.name);
-                showNotification('Dates blocked successfully!', 'success');
-            }
-        }
-
-        function unblockSelectedDates() {
-            const farmhouseId = document.getElementById('currentFarmhouseId').value;
-            const dateRange = document.getElementById('dateRangePicker').value;
-
-            if (!dateRange) {
-                alert('Please select dates first.');
-                return;
-            }
-
-            const datesToUnblock = dateRange.includes(' to ') ?
-                dateRange.split(' to ') : [dateRange];
-
-            const farmhouse = farmhouses.find(f => f.id == farmhouseId);
-            if (farmhouse && farmhouse.blockedDates) {
-                farmhouse.blockedDates = farmhouse.blockedDates.filter(date =>
-                    !datesToUnblock.includes(date)
-                );
-                farmhouse.lastUpdated = new Date().toISOString();
-                localStorage.setItem('farmhouses', JSON.stringify(farmhouses));
-
-                // Update UI
-                manageDates(farmhouseId, farmhouse.name);
-                showNotification('Dates unblocked successfully!', 'success');
-            }
-        }
-
-        function viewFarmhouse(id) {
-            const farmhouse = farmhouses.find(f => f.id === id);
-            if (!farmhouse) return;
-
-            document.getElementById('detailsTitle').textContent = farmhouse.name;
-            document.getElementById('detailsLocation').textContent = farmhouse.location;
-            document.getElementById('detailsDescription').textContent = farmhouse.description;
-            document.getElementById('detailsBasePrice').textContent = `$${farmhouse.price}/night`;
-            document.getElementById('detailsWeekendPrice').textContent = farmhouse.weekendPrice ?
-                `$${farmhouse.weekendPrice}/night` : 'Same as base price';
-            document.getElementById('detailsAvailableFrom').textContent = formatDate(farmhouse.availableFrom);
-            document.getElementById('detailsAvailableTo').textContent = formatDate(farmhouse.availableTo);
-
-            // Set up amenities
-            const amenitiesContainer = document.getElementById('detailsAmenities');
-            amenitiesContainer.innerHTML = farmhouse.amenities.map(amenity =>
-                `<span class="amenity-tag">${amenity}</span>`
-            ).join('');
-
-            // Set up carousel
-            const carouselInner = document.getElementById('carouselInner');
-            const images = farmhouse.photoUrls && farmhouse.photoUrls.length > 0 ?
-                farmhouse.photoUrls :
-                ['https://images.unsplash.com/photo-1518780664697-55e3ad937233?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'];
-
-            carouselInner.innerHTML = images.map((img, index) => `
-                <div class="carousel-item ${index === 0 ? 'active' : ''}">
-                    <img src="${img}" class="d-block w-100" style="height: 400px; object-fit: cover;" alt="Farmhouse Image ${index + 1}">
+            // Show success message
+            document.getElementById('responseMessage').innerHTML = `
+                <div class="alert alert-success">
+                    <strong><i class="fas fa-check-circle"></i> Registration Successful!</strong><br>
+                    Your Referral Code: <strong>${userCode}</strong><br>
+                    We'll contact you on WhatsApp within 24 hours for verification.<br>
+                    <button class="copy-btn" onclick="copyText('${userCode}')">Copy Referral Code</button>
                 </div>
-            `).join('');
-
-            new bootstrap.Modal(document.getElementById('detailsModal')).show();
-        }
-
-        function setViewMode(mode) {
-            const gridBtn = document.querySelector('[onclick="setViewMode(\'grid\')"]');
-            const listBtn = document.querySelector('[onclick="setViewMode(\'list\')"]');
-
-            gridBtn.classList.toggle('active', mode === 'grid');
-            listBtn.classList.toggle('active', mode === 'list');
-
-            // In a real app, you would implement list view here
-            // For now, we'll just show grid view
-        }
-
-        function updateStatistics() {
-            document.getElementById('total-farmhouses').textContent = farmhouses.length;
-
-            const today = new Date().toISOString().split('T')[0];
-            const availableCount = farmhouses.filter(f =>
-                f.availableFrom <= today && (!f.availableTo || f.availableTo >= today)
-            ).length;
-            document.getElementById('available-now').textContent = availableCount;
-
-            const totalRevenue = bookings.reduce((sum, b) => sum + b.totalAmount, 0);
-            document.getElementById('total-revenue').textContent = `$${totalRevenue}`;
-        }
-
-        function formatDate(dateString) {
-            return new Date(dateString).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric'
-            });
-        }
-
-        function showNotification(message, type = 'info') {
-            // Create a simple notification
-            const alertDiv = document.createElement('div');
-            alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
-            alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
-            alertDiv.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             `;
 
-            document.body.appendChild(alertDiv);
+            // In production, send this data to backend API
+            console.log('Form Data:', formData);
+            console.log('Generated Referral Code:', userCode);
+
+            // Send WhatsApp notification
+            const whatsappMsg = `New Registration!
+Name: ${formData.name}
+Phone: ${formData.phone}
+Transaction ID: ${formData.transactionId}
+Referral Code: ${userCode}`;
 
             setTimeout(() => {
-                if (alertDiv.parentNode) {
-                    alertDiv.remove();
+                window.open(`https://wa.me/919985943961?text=${encodeURIComponent(whatsappMsg)}`, '_blank');
+            }, 2000);
+
+            // Reset form
+            document.getElementById('registrationForm').reset();
+        }
+
+        // Dashboard Modal
+        function showDashboard() {
+            document.getElementById('dashboardModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDashboard() {
+            document.getElementById('dashboardModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Initialize calculator on load
+        window.onload = function() {
+            calculateEarnings();
+        };
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
-            }, 3000);
-        }
-
-        function exportData() {
-            const data = {
-                farmhouses: farmhouses,
-                bookings: bookings,
-                exportedAt: new Date().toISOString()
-            };
-
-            const dataStr = JSON.stringify(data, null, 2);
-            const dataBlob = new Blob([dataStr], { type: 'application/json' });
-
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(dataBlob);
-            link.download = `farmhouse-data-${new Date().toISOString().split('T')[0]}.json`;
-            link.click();
-
-            showNotification('Data exported successfully!', 'info');
-        }
-
-        function loadSampleData() {
-            if (farmhouses.length === 0) {
-                farmhouses = [
-                    {
-                        id: 1,
-                        name: "Riverside Farm Retreat",
-                        location: "Blue Ridge Mountains, Virginia",
-                        bedrooms: 3,
-                        bathrooms: 2,
-                        maxGuests: 6,
-                        description: "Beautiful farmhouse overlooking the river with modern amenities and traditional charm. Perfect for family getaways.",
-                        price: 189,
-                        weekendPrice: 225,
-                        availableFrom: new Date().toISOString().split('T')[0],
-                        availableTo: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                        blockedDates: [],
-                        photoUrls: [
-                            "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-                            "https://images.unsplash.com/photo-1568605114967-8130f3a36994?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                        ],
-                        amenities: ["WiFi", "Kitchen", "Parking", "Garden", "Pet Friendly"],
-                        createdAt: new Date().toISOString(),
-                        lastUpdated: new Date().toISOString()
-                    },
-                    {
-                        id: 2,
-                        name: "Sunset Valley Farm",
-                        location: "Shenandoah Valley, West Virginia",
-                        bedrooms: 4,
-                        bathrooms: 3,
-                        maxGuests: 8,
-                        description: "Luxury farmhouse with panoramic valley views, private pool, and premium amenities.",
-                        price: 275,
-                        weekendPrice: 325,
-                        availableFrom: new Date().toISOString().split('T')[0],
-                        availableTo: new Date(Date.now() + 120 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                        blockedDates: [],
-                        photoUrls: [
-                            "https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                        ],
-                        amenities: ["WiFi", "Pool", "Hot Tub", "Kitchen", "Parking", "AC"],
-                        createdAt: new Date().toISOString(),
-                        lastUpdated: new Date().toISOString()
-                    }
-                ];
-
-                localStorage.setItem('farmhouses', JSON.stringify(farmhouses));
-                loadFarmhouses();
-                updateStatistics();
-                showNotification('Sample data loaded successfully!', 'success');
-            } else {
-                showNotification('You already have farmhouses. Clear data first to load samples.', 'warning');
-            }
-        }
+            });
+        });
     </script>
 </body>
-
 </html>
